@@ -33,18 +33,41 @@ export const GlobalProvider = ({ children }) => {
     }
   }
 
-  function deleteTransaction(id) {
-    dispatch({
-      type: 'DELETE_TRANSACTION',
-      payload: id
-    })
+   async function deleteTransaction(id) {
+     try {
+       await axios.delete(`/api/transactions/${id}`)
+
+       dispatch({
+        type: 'DELETE_TRANSACTION',
+        payload: id
+      })
+     } catch (err) {
+      dispatch({
+        type: 'TRANSACTION_ERROR',
+        payload: err.response.data.error
+      })
+     }
+
   }
 
-  function addTransaction(transaction) {
-    dispatch({
-      type: 'ADD_TRANSACTION',
-      payload: transaction
-    })
+  async function addTransaction(transaction) {
+      const headers = {
+        'Content-Type': 'application/json'
+      }
+
+    try {
+      const res = await axios.post('/api/transactions', transaction, headers)
+
+      dispatch({
+        type: 'ADD_TRANSACTION',
+        payload: res.data.data
+      })
+    } catch (err) {
+      dispatch({
+        type: 'TRANSACTION_ERROR',
+        payload: err.response.data.error
+      })
+    }
   }
 
   return (
