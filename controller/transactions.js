@@ -29,7 +29,7 @@ exports.addTransaction = async (req, res, next) => {
 
     const transaction = await Transaction.create(req.body)
 
-    return res.status(201). json({
+    return res.status(201).json({
       success: true,
       data: transaction
     })
